@@ -50,9 +50,33 @@ function load_mailbox(mailbox) {
     for (const i in emails){
       const element = document.createElement('div');
       element.className = "email-box"
-      element.innerHTML = `${emails[i]["sender"]} ${emails[i]["subject"]}`
+      if (emails[i]["read"] === true){
+        element.style.backgroundColor  = "gray";
+      }else{
+        element.style.backgroundColor = "white";
+      }
+      element.innerHTML = `${emails[i]["sender"]} ${emails[i]["subject"]} ${emails[i]["timestamp"]}`
       element.addEventListener('click', function() {
-          console.log('This element has been clicked!')
+          fetch(`/emails/${emails[i]["id"]}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+                read: true
+            })
+          })
+        document.querySelector('#emails-view').style.display = 'none';
+        document.querySelector('#content-view').style.display = 'block';
+        let sender = emails[i]["sender"];
+        let recipients = emails[i]["recipients"];
+        let subject = emails[i]["subject"];
+        let timestamp = emails[i]["timestamp"];
+        e = document.querySelector('#head');
+        e.innerHTML += `<strong>From:</strong> ${emails[i]["sender"]}<br><strong>To:</strong> `;
+        for (const i in recipients){
+          e.innerHTML += recipients[i];
+          e.innerHTML += ` `
+        }
+        e.innerHTML += `<br><strong>Subject:</strong> ${emails[i]["subject"]}<br><strong>Timestamp:</strong>${emails[i]["timestamp"]}<hr>`
+
       });
       document.querySelector('#emails-view').append(element);
 
