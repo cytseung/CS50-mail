@@ -2,6 +2,12 @@
 {% load static %}
 
 {% block body %}
+    <style>
+        .email-box{
+            border-style:solid;
+            margin: 10px 25px;
+        }
+    </style>
     <h2>{{ request.user.email }}</h2>
 
     <button class="btn btn-sm btn-outline-primary" id="inbox">Inbox</button>

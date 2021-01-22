@@ -41,6 +41,28 @@ function load_mailbox(mailbox) {
 
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
+
+  // Load emails in mailbox
+  fetch(`/emails/${mailbox}`)
+  .then(response => response.json())
+  .then(emails => {
+    // Print emails
+    for (const i in emails){
+      const element = document.createElement('div');
+      element.className = "email-box"
+      element.innerHTML = `${emails[i]["sender"]} ${emails[i]["subject"]}`
+      element.addEventListener('click', function() {
+          console.log('This element has been clicked!')
+      });
+      document.querySelector('#emails-view').append(element);
+
+    }
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+
+
 }
 
 function send_email(recipients, subject, body){
