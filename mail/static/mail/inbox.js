@@ -14,7 +14,9 @@ function compose_email() {
 
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#content-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
+  
 
   // Clear out composition fields
   document.querySelector('#compose-recipients').value = '';
@@ -37,6 +39,7 @@ function load_mailbox(mailbox) {
   
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
+  document.querySelector('#content-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'none';
 
   // Show the mailbox name
@@ -65,18 +68,15 @@ function load_mailbox(mailbox) {
           })
         document.querySelector('#emails-view').style.display = 'none';
         document.querySelector('#content-view').style.display = 'block';
-        let sender = emails[i]["sender"];
         let recipients = emails[i]["recipients"];
-        let subject = emails[i]["subject"];
-        let timestamp = emails[i]["timestamp"];
-        e = document.querySelector('#head');
-        e.innerHTML += `<strong>From:</strong> ${emails[i]["sender"]}<br><strong>To:</strong> `;
+        e = document.querySelector('#content');
+        e.innerHTML = `<strong>From:</strong> ${emails[i]["sender"]}<br><strong>To:</strong> `;
         for (const i in recipients){
           e.innerHTML += recipients[i];
           e.innerHTML += ` `
         }
-        e.innerHTML += `<br><strong>Subject:</strong> ${emails[i]["subject"]}<br><strong>Timestamp:</strong>${emails[i]["timestamp"]}<hr>`
-
+        e.innerHTML += `<br><strong>Subject:</strong> ${emails[i]["subject"]}<br><strong>Timestamp:</strong>${emails[i]["timestamp"]}<br>`
+        e.innerHTML += `<button>Reply</button><hr>${emails[i]["body"]}`
       });
       document.querySelector('#emails-view').append(element);
 
