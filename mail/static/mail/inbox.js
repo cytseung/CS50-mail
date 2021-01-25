@@ -31,6 +31,7 @@ function compose_email() {
     send_email(recipients, subject, body);
   });
   
+  
 
   
 }
@@ -44,12 +45,16 @@ function load_mailbox(mailbox) {
 
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
+  // console.log(`fetching ${mailbox}`)
 
   // Load emails in mailbox
   fetch(`/emails/${mailbox}`)
+  // .then(console.log("after fetch"))
   .then(response => response.json())
+  // .then(console.log("after response"))
   .then(emails => {
     // Print emails
+    console.log(emails);
     for (const i in emails){
       const element = document.createElement('div');
       element.className = "email-box"
@@ -59,30 +64,14 @@ function load_mailbox(mailbox) {
         element.style.backgroundColor = "white";
       }
       element.innerHTML = `${emails[i]["sender"]} ${emails[i]["subject"]} ${emails[i]["timestamp"]}`
-      element.addEventListener('click', function() {
-          fetch(`/emails/${emails[i]["id"]}`, {
-            method: 'PUT',
-            body: JSON.stringify({
-                read: true
-            })
-          })
-        document.querySelector('#emails-view').style.display = 'none';
-        document.querySelector('#content-view').style.display = 'block';
-        let recipients = emails[i]["recipients"];
-        e = document.querySelector('#content');
-        e.innerHTML = `<strong>From:</strong> ${emails[i]["sender"]}<br><strong>To:</strong> `;
-        for (const i in recipients){
-          e.innerHTML += recipients[i];
-          e.innerHTML += ` `
-        }
-        e.innerHTML += `<br><strong>Subject:</strong> ${emails[i]["subject"]}<br><strong>Timestamp:</strong>${emails[i]["timestamp"]}<br>`
-        e.innerHTML += `<button>Reply</button><hr>${emails[i]["body"]}`
-      });
+      element.addEventListener('click', ()=>load_email(emails[i]));
       document.querySelector('#emails-view').append(element);
 
     }
   })
+  // .then(console.log(`fetched ${mailbox}`))
   .catch((error) => {
+    console.log("failed to fetch mailbox");
     console.log(error);
   });
 
@@ -91,7 +80,7 @@ function load_mailbox(mailbox) {
 
 function send_email(recipients, subject, body){
   // console.log(`${recipients},${subject},${body}`);
-  fetch('/emails',{
+    fetch('/emails',{
     method: 'POST',
     body: JSON.stringify({
     recipients: recipients,
@@ -101,9 +90,34 @@ function send_email(recipients, subject, body){
   })
   .then(response => response.json())
   .then(result => {
+    load_mailbox('sent')
     console.log(result);
   })
   .catch((error) => {
     console.log(error);
   });
+}
+
+function load_email(email){
+  fetch(`/emails/${email["id"]}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+        read: true
+    })
+  })
+  .catch((error) => {
+    // console.log("failed to update read");
+    console.log(error);
+  })
+  document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#content-view').style.display = 'block';
+  let recipients = email["recipients"];
+  e = document.querySelector('#content');
+  e.innerHTML = `<strong>From:</strong> ${email["sender"]}<br><strong>To:</strong> `;
+  for (const i in recipients){
+    e.innerHTML += recipients[i];
+    e.innerHTML += ` `
+  }
+  e.innerHTML += `<br><strong>Subject:</strong> ${email["subject"]}<br><strong>Timestamp:</strong>${email["timestamp"]}<br>`
+  e.innerHTML += `<button>Reply</button><hr>${email["body"]}`
 }
