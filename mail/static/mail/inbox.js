@@ -24,20 +24,18 @@ function compose_email() {
   document.querySelector('#compose-body').value = '';
 
   // send email
-  document.querySelector('#send').addEventListener('click', ()=>{
+  document.querySelector('#send').addEventListener('click', event=>{
+    event.preventDefault();
     let recipients = document.querySelector('#compose-recipients').value;
     let subject = document.querySelector('#compose-subject').value;
     let body = document.querySelector('#compose-body').value;
     send_email(recipients, subject, body);
   });
   
-  
-
-  
 }
 
 function load_mailbox(mailbox) {
-  
+  console.log("load_mailbox() called")
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#content-view').style.display = 'none';
@@ -49,9 +47,9 @@ function load_mailbox(mailbox) {
 
   // Load emails in mailbox
   fetch(`/emails/${mailbox}`)
-  // .then(console.log("after fetch"))
+  .then(console.log("after fetch"))
   .then(response => response.json())
-  // .then(console.log("after response"))
+  .then(console.log("after response"))
   .then(emails => {
     // Print emails
     console.log(emails);
@@ -66,20 +64,18 @@ function load_mailbox(mailbox) {
       element.innerHTML = `${emails[i]["sender"]} ${emails[i]["subject"]} ${emails[i]["timestamp"]}`
       element.addEventListener('click', ()=>load_email(emails[i]));
       document.querySelector('#emails-view').append(element);
-
     }
   })
-  // .then(console.log(`fetched ${mailbox}`))
+  .then(console.log(`fetched ${mailbox}`))
   .catch((error) => {
     console.log("failed to fetch mailbox");
     console.log(error);
   });
-
-
 }
 
 function send_email(recipients, subject, body){
   // console.log(`${recipients},${subject},${body}`);
+    console.log("send_email() called")
     fetch('/emails',{
     method: 'POST',
     body: JSON.stringify({
@@ -96,6 +92,7 @@ function send_email(recipients, subject, body){
   .catch((error) => {
     console.log(error);
   });
+  // return false;
 }
 
 function load_email(email){
