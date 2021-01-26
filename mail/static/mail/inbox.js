@@ -50,9 +50,9 @@ function load_mailbox(mailbox) {
 
   // Load emails in mailbox
   fetch(`/emails/${mailbox}`)
-  .then(console.log("after fetch"))
+  // .then(console.log("after fetch"))
   .then(response => response.json())
-  .then(console.log("after response"))
+  // .then(console.log("after response"))
   .then(emails => {
     // Print emails
     console.log(emails);
@@ -64,13 +64,24 @@ function load_mailbox(mailbox) {
       }else{
         element.style.backgroundColor = "white";
       }
-      element.innerHTML = `${emails[i]["sender"]} ${emails[i]["subject"]} ${emails[i]["timestamp"]} <button class="archive-button">Archive</button>`
+      element.innerHTML = `${emails[i]["sender"]} ${emails[i]["subject"]} ${emails[i]["timestamp"]}`;
       element.addEventListener('click', ()=>load_email(emails[i]), false);
-      element.children[0].addEventListener('click', (event)=>{event.stopPropagation();}, false)
+      if (mailbox == "inbox" || mailbox == "archive"){
+        if (emails[i]["archived"] == false){
+          element.innerHTML += `<button class="archive-button">Archive</button>`;
+          archvbutton = element.children[0];
+          archvbutton.addEventListener('click', (event)=>{event.stopPropagation();}, false);
+          archvbutton.addEventListener('click', ()=>archive_email(emails[i], true))
+        }else{
+          element.innerHTML += `<button class="archive-button">Unarchive</button>`;
+          archvbutton = element.children[0];
+          element.children[0].addEventListener('click', (event)=>{event.stopPropagation();}, false);
+          archvbutton.addEventListener('click', ()=>archive_email(emails[i], false))
+        }
+      }
       document.querySelector('#emails-view').append(element);
     }
   })
-  .then(console.log(`fetched ${mailbox}`))
   .catch((error) => {
     console.log("failed to fetch mailbox");
     console.log(error);
@@ -129,3 +140,30 @@ function load_email(email){
   e.innerHTML += `<br><strong>Subject:</strong> ${email["subject"]}<br><strong>Timestamp:</strong>${email["timestamp"]}<br>`
   e.innerHTML += `<button>Reply</button><hr>${email["body"]}`
 }
+
+function archive_email(email, archive){
+  console.log("function called!")
+  if (archive == true){
+    fetch(`/emails/${email["id"]}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+          archived: true
+      })
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  }
+  else{
+      fetch(`/emails/${email["id"]}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+            archived: false
+        })
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  }
+  load_mailbox("inbox");
+} 
