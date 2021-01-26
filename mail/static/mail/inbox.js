@@ -4,13 +4,13 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#inbox').addEventListener('click', () => load_mailbox('inbox'));
   document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
   document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
-  document.querySelector('#compose').addEventListener('click', compose_email);
+  document.querySelector('#compose').addEventListener('click', ()=>compose_email());
 
   // By default, load the inbox
   load_mailbox('inbox');
 });
 
-function compose_email() {
+function compose_email(email) {
 
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
@@ -19,9 +19,16 @@ function compose_email() {
   
 
   // Clear out composition fields
+
   document.querySelector('#compose-recipients').value = '';
   document.querySelector('#compose-subject').value = '';
   document.querySelector('#compose-body').value = '';
+  if (email){
+    console.log(email);
+    document.querySelector('#compose-recipients').value = email["sender"];
+    document.querySelector('#compose-subject').value = "Re: " + email["subject"];
+  
+  }
   document.querySelector('#send').disabled = false;
   // send email
   document.querySelector('#compose-form').onsubmit = event=>{
@@ -173,5 +180,6 @@ function archive_email(email, archive){
 }
 
 function reply_email(email){
-  compose_email();
+  console.log(email);
+  compose_email(email);
 }
