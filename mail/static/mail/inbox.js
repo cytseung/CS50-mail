@@ -152,10 +152,10 @@ function load_email(email){
   replybutton.addEventListener('click', ()=>reply_email(email));
 }
 
-function archive_email(email, archive){
+async function archive_email(email, archive){
   console.log("function called!")
   if (archive == true){
-    fetch(`/emails/${email["id"]}`, {
+    await fetch(`/emails/${email["id"]}`, {
       method: 'PUT',
       body: JSON.stringify({
           archived: true
@@ -166,7 +166,7 @@ function archive_email(email, archive){
     })
   }
   else{
-      fetch(`/emails/${email["id"]}`, {
+      await fetch(`/emails/${email["id"]}`, {
         method: 'PUT',
         body: JSON.stringify({
             archived: false
