@@ -22,7 +22,7 @@ function compose_email() {
   document.querySelector('#compose-recipients').value = '';
   document.querySelector('#compose-subject').value = '';
   document.querySelector('#compose-body').value = '';
-
+  document.querySelector('#send').disabled = false;
   // send email
   document.querySelector('#send').addEventListener('click', event=>{
     event.preventDefault();
@@ -30,6 +30,7 @@ function compose_email() {
     let subject = document.querySelector('#compose-subject').value;
     let body = document.querySelector('#compose-body').value;
     send_email(recipients, subject, body);
+    
   });
   
 }
@@ -84,13 +85,20 @@ function send_email(recipients, subject, body){
     body: body
     })
   })
-  .then(response => response.json())
-  .then(result => {
-    load_mailbox('sent')
+  .then(async response => {
+    console.log(response.status)
+    if (response.status == 201){
+      load_mailbox('sent');
+    }
+    result = await response.json()
     console.log(result);
+    if (response.status == 400){
+      alert(result["error"])
+    }
   })
   .catch((error) => {
     console.log(error);
+    alert(error);
   });
   // return false;
 }
