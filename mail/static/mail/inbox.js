@@ -24,14 +24,16 @@ function compose_email() {
   document.querySelector('#compose-body').value = '';
   document.querySelector('#send').disabled = false;
   // send email
-  document.querySelector('#send').addEventListener('click', event=>{
+  document.querySelector('#compose-form').onsubmit = event=>{
     event.preventDefault();
+    document.querySelector('#send').disabled = true;
     let recipients = document.querySelector('#compose-recipients').value;
     let subject = document.querySelector('#compose-subject').value;
     let body = document.querySelector('#compose-body').value;
     send_email(recipients, subject, body);
+
     
-  });
+  };
   
 }
 
@@ -94,13 +96,13 @@ function send_email(recipients, subject, body){
     console.log(result);
     if (response.status == 400){
       alert(result["error"])
+      document.querySelector('#send').disabled = false;
     }
   })
   .catch((error) => {
     console.log(error);
     alert(error);
   });
-  // return false;
 }
 
 function load_email(email){
