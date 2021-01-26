@@ -118,6 +118,7 @@ function send_email(recipients, subject, body){
 }
 
 function load_email(email){
+  console.log("load_email() called")
   fetch(`/emails/${email["id"]}`, {
     method: 'PUT',
     body: JSON.stringify({
@@ -139,6 +140,9 @@ function load_email(email){
   }
   e.innerHTML += `<br><strong>Subject:</strong> ${email["subject"]}<br><strong>Timestamp:</strong>${email["timestamp"]}<br>`
   e.innerHTML += `<button>Reply</button><hr>${email["body"]}`
+
+  replybutton  = e.children[e.children.length - 2];
+  replybutton.addEventListener('click', ()=>reply_email(email));
 }
 
 function archive_email(email, archive){
@@ -166,4 +170,8 @@ function archive_email(email, archive){
       })
   }
   load_mailbox("inbox");
-} 
+}
+
+function reply_email(email){
+  compose_email();
+}
