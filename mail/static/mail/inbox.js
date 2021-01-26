@@ -64,8 +64,9 @@ function load_mailbox(mailbox) {
       }else{
         element.style.backgroundColor = "white";
       }
-      element.innerHTML = `${emails[i]["sender"]} ${emails[i]["subject"]} ${emails[i]["timestamp"]}`
-      element.addEventListener('click', ()=>load_email(emails[i]));
+      element.innerHTML = `${emails[i]["sender"]} ${emails[i]["subject"]} ${emails[i]["timestamp"]} <button class="archive-button">Archive</button>`
+      element.addEventListener('click', ()=>load_email(emails[i]), false);
+      element.children[0].addEventListener('click', (event)=>{event.stopPropagation();}, false)
       document.querySelector('#emails-view').append(element);
     }
   })
