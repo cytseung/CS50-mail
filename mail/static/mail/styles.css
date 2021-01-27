@@ -6,4 +6,37 @@ textarea {
     border-style:solid;
     margin: 10px 25px;
     padding: 5px;
+    width:90%;
+    height:80px;
+    position: relative;
+
 }
+
+.sender {
+    width:25%;
+
+    /* float: left; */
+  }
+
+.subject {
+
+    width:25%;
+
+    /* float: left; */
+  }
+
+.timestamp {
+
+    width:20%;
+    margin-right:0px;
+    float: right;
+  }
+
+.archive-button {
+
+    width:90px;
+    margin:3px;
+
+   float:right;
+
+  }

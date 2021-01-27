@@ -72,16 +72,16 @@ function load_mailbox(mailbox) {
       }else{
         element.style.backgroundColor = "white";
       }
-      element.innerHTML = `<strong>${emails[i]["sender"]}</strong>&nbsp; ${emails[i]["subject"]} <span style="float:right">${emails[i]["timestamp"]}</span>`;
+      element.innerHTML = `<span class="sender"><strong>${emails[i]["sender"]}</strong></span> <span class="subject"> ${emails[i]["subject"]}</span> <span class="timestamp">${emails[i]["timestamp"]}</span>`;
       element.addEventListener('click', ()=>load_email(emails[i]), false);
       if (mailbox == "inbox" || mailbox == "archive"){
         if (emails[i]["archived"] == false){
-          element.innerHTML += `<button class="btn btn-primary archive-button">Archive</button>`;
+          element.innerHTML += `<button class="btn btn-secondary btn-sm archive-button">Archive</button>`;
           archvbutton = element.children[element.children.length -1];
           archvbutton.addEventListener('click', (event)=>{event.stopPropagation();}, false);
           archvbutton.addEventListener('click', ()=>archive_email(emails[i], true))
         }else{
-          element.innerHTML += `<button class="btn btn-primary archive-button">Unarchive</button>`;
+          element.innerHTML += `<button class="btn btn-secondary btn-sm archive-button">Unarchive</button>`;
           archvbutton = element.children[element.children.length -1];
           console.log(archvbutton, "fjsakld;fjakl")
           element.children[0].addEventListener('click', (event)=>{event.stopPropagation();}, false);
