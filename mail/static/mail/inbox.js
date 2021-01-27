@@ -37,7 +37,7 @@ function compose_email(email) {
     let recipients = document.querySelector('#compose-recipients').value;
     let subject = document.querySelector('#compose-subject').value;
     let body = document.querySelector('#compose-body').value;
-    body = "<pre>" + body + "</pre>";
+    body = body.replace(/\n\r?/g, '<br />'); 
     send_email(recipients, subject, body);
 
     
