@@ -27,7 +27,7 @@ function compose_email(email) {
     console.log(email);
     document.querySelector('#compose-recipients').value = email["sender"];
     document.querySelector('#compose-subject').value = "Re: " + email["subject"];
-  
+    document.querySelector('#compose-body').value = `On ${email["timestamp"]} ${email["sender"]} wrote: \n ${email["body"]}`;
   }
   document.querySelector('#send').disabled = false;
   // send email
@@ -37,6 +37,7 @@ function compose_email(email) {
     let recipients = document.querySelector('#compose-recipients').value;
     let subject = document.querySelector('#compose-subject').value;
     let body = document.querySelector('#compose-body').value;
+    body = "<pre>" + body + "</pre>";
     send_email(recipients, subject, body);
 
     
@@ -75,12 +76,12 @@ function load_mailbox(mailbox) {
       element.addEventListener('click', ()=>load_email(emails[i]), false);
       if (mailbox == "inbox" || mailbox == "archive"){
         if (emails[i]["archived"] == false){
-          element.innerHTML += `<button class="archive-button">Archive</button>`;
+          element.innerHTML += `<button class="btn btn-primary archive-button">Archive</button>`;
           archvbutton = element.children[0];
           archvbutton.addEventListener('click', (event)=>{event.stopPropagation();}, false);
           archvbutton.addEventListener('click', ()=>archive_email(emails[i], true))
         }else{
-          element.innerHTML += `<button class="archive-button">Unarchive</button>`;
+          element.innerHTML += `<button class="btn btn-primary archive-button">Unarchive</button>`;
           archvbutton = element.children[0];
           element.children[0].addEventListener('click', (event)=>{event.stopPropagation();}, false);
           archvbutton.addEventListener('click', ()=>archive_email(emails[i], false))
@@ -146,7 +147,7 @@ function load_email(email){
     e.innerHTML += ` `
   }
   e.innerHTML += `<br><strong>Subject:</strong> ${email["subject"]}<br><strong>Timestamp:</strong>${email["timestamp"]}<br>`
-  e.innerHTML += `<button>Reply</button><hr>${email["body"]}`
+  e.innerHTML += `<button class="btn btn-sm btn-outline-primary">Reply</button><hr>${email["body"]}`
 
   replybutton  = e.children[e.children.length - 2];
   replybutton.addEventListener('click', ()=>reply_email(email));
