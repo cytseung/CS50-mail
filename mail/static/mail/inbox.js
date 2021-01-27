@@ -72,17 +72,18 @@ function load_mailbox(mailbox) {
       }else{
         element.style.backgroundColor = "white";
       }
-      element.innerHTML = `${emails[i]["sender"]} ${emails[i]["subject"]} ${emails[i]["timestamp"]}`;
+      element.innerHTML = `<strong>${emails[i]["sender"]}</strong>&nbsp; ${emails[i]["subject"]} <span style="float:right">${emails[i]["timestamp"]}</span>`;
       element.addEventListener('click', ()=>load_email(emails[i]), false);
       if (mailbox == "inbox" || mailbox == "archive"){
         if (emails[i]["archived"] == false){
           element.innerHTML += `<button class="btn btn-primary archive-button">Archive</button>`;
-          archvbutton = element.children[0];
+          archvbutton = element.children[element.children.length -1];
           archvbutton.addEventListener('click', (event)=>{event.stopPropagation();}, false);
           archvbutton.addEventListener('click', ()=>archive_email(emails[i], true))
         }else{
           element.innerHTML += `<button class="btn btn-primary archive-button">Unarchive</button>`;
-          archvbutton = element.children[0];
+          archvbutton = element.children[element.children.length -1];
+          console.log(archvbutton, "fjsakld;fjakl")
           element.children[0].addEventListener('click', (event)=>{event.stopPropagation();}, false);
           archvbutton.addEventListener('click', ()=>archive_email(emails[i], false))
         }
@@ -147,9 +148,9 @@ function load_email(email){
     e.innerHTML += ` `
   }
   e.innerHTML += `<br><strong>Subject:</strong> ${email["subject"]}<br><strong>Timestamp:</strong>${email["timestamp"]}<br>`
-  e.innerHTML += `<button class="btn btn-sm btn-outline-primary">Reply</button><hr>${email["body"]}`
+  e.innerHTML += `<button class="btn btn-sm btn-outline-primary" id="reply-button">Reply</button><hr>${email["body"]}`
 
-  replybutton  = e.children[e.children.length - 2];
+  replybutton  = document.querySelector("#reply-button")
   replybutton.addEventListener('click', ()=>reply_email(email));
 }
 
