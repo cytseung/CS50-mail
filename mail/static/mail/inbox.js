@@ -58,9 +58,7 @@ function load_mailbox(mailbox) {
 
   // Load emails in mailbox
   fetch(`/emails/${mailbox}`)
-  // .then(console.log("after fetch"))
   .then(response => response.json())
-  // .then(console.log("after response"))
   .then(emails => {
     // Print emails
     console.log(emails);
@@ -98,8 +96,6 @@ function load_mailbox(mailbox) {
 }
 
 function send_email(recipients, subject, body){
-  // console.log(`${recipients},${subject},${body}`);
-    console.log("send_email() called")
     fetch('/emails',{
     method: 'POST',
     body: JSON.stringify({
@@ -127,7 +123,6 @@ function send_email(recipients, subject, body){
 }
 
 function load_email(email){
-  console.log("load_email() called")
   fetch(`/emails/${email["id"]}`, {
     method: 'PUT',
     body: JSON.stringify({
@@ -151,11 +146,10 @@ function load_email(email){
   e.innerHTML += `<button class="btn btn-sm btn-outline-primary" id="reply-button">Reply</button><hr>${email["body"]}`
 
   replybutton  = document.querySelector("#reply-button")
-  replybutton.addEventListener('click', ()=>reply_email(email));
+  replybutton.addEventListener('click', ()=>compose_email(email));
 }
 
 async function archive_email(email, archive){
-  console.log("function called!")
   if (archive == true){
     await fetch(`/emails/${email["id"]}`, {
       method: 'PUT',
@@ -179,9 +173,4 @@ async function archive_email(email, archive){
       })
   }
   load_mailbox("inbox");
-}
-
-function reply_email(email){
-  console.log(email);
-  compose_email(email);
 }
